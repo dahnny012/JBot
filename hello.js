@@ -1,4 +1,6 @@
 var convoManager = [];
+var messageList = $(".message-list");
+var messagePointer = 0;
 
 function loadJQuery()
 {	var jNode = document.createElement("script");
@@ -18,21 +20,27 @@ function sayHello()
 
 function sendText(text)
 {
-
-}
+	// load text into message box
+	$("#input-message").val(text);
+	$("#button-send").click();
+}	
 
 
 function main()
 {
 	loadJQuery();
 	// run a timeout function
-	if(waitForNoobs)
+	if(checkForEvent == 'sign in')
 	{
-		sayHello();
+		startConversation();
+	}
+	if else(checkForEvent == 'replied')
+	{
+		
 	}
 	else
 	{
-		if(
+		// do nothing
 	}
 	//
 
@@ -47,10 +55,35 @@ function Person(name){
 }
 
 
+function checkForEvent()
+{
+	if(messageList[messagePointer + 1] != null)
+	{
+		messagePointer++;
+		var message = messageList[messagePointer];
+	
+		// checks for sign in
+		if(message.search(/[has signed in$]/))
+		{	
+			var name = getSignInName(message);
+			sayHello(name);
+			convoManager.push(Person(name));
+			return 'sign in';
+		}
+		
+	}
+	else
+	{
+		return false;
+	}
+}
 
 
-
-
-
+function getSignInName(message)
+{
+	var index = message.search(/[^has$]/);
+	var name = substr(0,index);
+	return name;
+}
 
 
