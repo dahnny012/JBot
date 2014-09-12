@@ -18,6 +18,11 @@ function person(name){
 
 function main()
 {
+	setInterval(loop(),100);
+}
+
+function loop()
+{
 	event = checkForEvent();
 	if(event)
 	{
@@ -62,7 +67,7 @@ function checkForEvent()
 function checkSignIn(event)
 {
 	message = msgList[event];
-	if(message.search(/[has signed in.$]/)) // subject to change after analyzing structure.
+	if(message.search(/[*has signed in.$]/)) // subject to change after analyzing structure.
 	{	
 			return true;
 	}
@@ -79,10 +84,22 @@ function getName(event)
 
 function greet(name)
 {
-	// build greeting;
-	// send greeting
-	var greeting = "
+	var date = new Date();
+	var greeting = '';
+	time = date.getHours() + date.getMinutes()/100;
+	switch(time){
+	case time <= 11.59:
+		greeting += "Ohayoo Gozaimasu";
+		break;
+	case time >= 12.00 && time <= 16.59:
+		greeting += "Konichiwa";
+		break;
+	default:
+		greeting += "Konbanwa";
+		break;
+	}
 	
+	return greeting + " " + name;
 }
 
 
