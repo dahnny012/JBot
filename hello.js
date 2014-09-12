@@ -16,6 +16,7 @@ function sayHello()
 		// temp = event(Pointer)
 		// var name = getName()
 		// set message box html to (" ____ i am danh-bot")
+		// test
 }
 
 function sendText(text)
