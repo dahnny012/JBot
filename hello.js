@@ -7,7 +7,7 @@ function loadJQuery()
 	jNode.src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js";
 	document.body.appendChild(jNode);
 }
-
+//test
 function sayHello()
 {
 	// var temp
