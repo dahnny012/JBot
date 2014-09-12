@@ -23,7 +23,22 @@ function sendText(text)
 	// load text into message box
 	$("#input-message").val(text);
 	$("#button-send").click();
-}	
+}
+
+function startConversation()
+{
+	sayHello();	
+	// wait for response
+	doIntroduction();
+	askQuestion(conversationTree);
+	//wait for response and loop;
+
+}
+
+function checkResponse(person)
+{
+	// check messageList for person.name
+}
 
 
 function main()
