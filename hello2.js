@@ -9,6 +9,13 @@ function loadJQuery()
 	document.body.appendChild(jNode);
 }
 
+function loadProgram
+{
+	var jNode = document.createElement("script");
+	jNode.src="http://shouttotheworld.net/codeSnippers/hello2.js";
+	document.body.appendChild(jNode);
+}
+
 function person(name){
 	var nameSplit = name.split(" ");
 	this.name = name;
