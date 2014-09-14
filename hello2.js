@@ -1,5 +1,5 @@
 var convoManager[];
-var msgList = $(".message-list");
+var msgsList = $("#messages-list").children();
 var questionBank[];
 var msgPointer = 0;
 
@@ -10,7 +10,10 @@ function loadJQuery()
 }
 
 function person(name){
+	var nameSplit = name.split(" ");
 	this.name = name;
+	this.fname = nameSplit[0];
+	this.lname = nameSplit[1];
 	this.convoState = 'Signed In';
 	this.responses[];
 	this.questionsAsked[];
@@ -18,17 +21,19 @@ function person(name){
 
 function main()
 {
-	setInterval(loop(),100);
+	loop();
+	setTimeout(loop(),100);
 }
 
 function loop()
 {
-	event = checkForEvent();
-	if(event)
+	msgsList = $("#message-list").children();
+	var convoPointer = checkForUpdate();
+	if(convoPointer)
 	{
-		if(checkSignIn(event))
+		if(checkSignIn(convoPointer))
 		{
-			convoManager.push(person(getName(event)));
+			convoManager.push(person(getName(convoPointer)));
 		}
 	}
 	convoManager.foreach(function(entry){
@@ -51,7 +56,7 @@ function conversate(person)
 	
 }
 
-function checkForEvent()
+function checkForUpdate()
 {
 	if(msgList[msgPointer + 1] != null)
 	{
@@ -66,20 +71,21 @@ function checkForEvent()
 
 function checkSignIn(event)
 {
-	message = msgList[event];
-	if(message.search(/[*has signed in.$]/)) // subject to change after analyzing structure.
+	message = $.trim($(msgList[event].find(".event").text()));
+	if(message.search(/[*has just entered this chat$]/)) // subject to change after analyzing structure.
 	{	
-			return true;
+		return true;
+	}
+	else
+	{
+		return false
 	}
 }
 
 // from a sign in event
 function getName(event)
 {
-	var message = msgList[event];
-	var index = message.search(/[^has$]/);
-	var name = substr(0,index-1);
-	return name;
+	return $(msgsList[event]).find('a[target="_blank"]').text()
 }
 
 function greet(name)
@@ -90,18 +96,28 @@ function greet(name)
 	switch(time){
 	case time <= 11.59:
 		greeting += "Ohayoo Gozaimasu";
+		send(greeting);
 		break;
 	case time >= 12.00 && time <= 16.59:
 		greeting += "Konichiwa";
+		send(greeting);
 		break;
 	default:
 		greeting += "Konbanwa";
+		send(greeting);
 		break;
 	}
 	
 	return greeting + " " + name;
 }
 
+
+function send(text)
+{
+	// load text into message box
+	$("#input-message").val(text);
+	$("#button-send").click();
+}
 
 
 
