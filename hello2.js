@@ -9,10 +9,10 @@ function loadJQuery()
 	document.body.appendChild(jNode);
 }
 
-function loadProgram
+function loadProgram()
 {
 	var jNode = document.createElement("script");
-	jNode.src="http://shouttotheworld.net/codeSnippers/hello2.js";
+	jNode.src="http://shouttotheworld.net/codeSnippets/hello2.js";
 	document.body.appendChild(jNode);
 }
 
