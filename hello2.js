@@ -12,7 +12,7 @@ function loadJQuery()
 function loadProgram()
 {
 	var jNode = document.createElement("script");
-	jNode.src="http://shouttotheworld.net/codeSnippets/hello2.js";
+	jNode.src="https://shouttotheworld.net/codeSnippets/hello2.js";
 	document.body.appendChild(jNode);
 }
 
