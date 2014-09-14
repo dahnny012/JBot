@@ -119,6 +119,9 @@ function send(text)
 	$("#button-send").click();
 }
 
+loadJQuery();
+main();
+
 
 
 
