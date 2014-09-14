@@ -1,18 +1,8 @@
-var convoManager[];
-var msgsList = $("#messages-list").children();
-var questionBank[];
-var msgPointer = 0;
+<script>
 
 function loadJQuery()
 {	var jNode = document.createElement("script");
 	jNode.src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js";
-	document.body.appendChild(jNode);
-}
-
-function loadProgram()
-{
-	var jNode = document.createElement("script");
-	jNode.src="https://shouttotheworld.net/codeSnippets/hello2.js";
 	document.body.appendChild(jNode);
 }
 
@@ -22,8 +12,10 @@ function person(name){
 	this.fname = nameSplit[0];
 	this.lname = nameSplit[1];
 	this.convoState = 'Signed In';
-	this.responses[];
-	this.questionsAsked[];
+	this.responses =[];
+	this.questionsAsked =[];
+   
+   return this;
 }
 
 function main()
@@ -34,7 +26,7 @@ function main()
 
 function loop()
 {
-	msgsList = $("#message-list").children();
+	msgList = $("#message-list").children();
 	var convoPointer = checkForUpdate();
 	if(convoPointer)
 	{
@@ -43,9 +35,11 @@ function loop()
 			convoManager.push(person(getName(convoPointer)));
 		}
 	}
-	convoManager.foreach(function(entry){
-	conversate(entry);
-	})
+   
+   for(i=0; i<convoManager.length; i++)
+   {
+      conversate(convoManager[i]);
+   }
 	
 }
 
@@ -78,7 +72,7 @@ function checkForUpdate()
 
 function checkSignIn(event)
 {
-	message = $.trim($(msgList[event].find(".event").text()));
+	var message = $.trim($(msgList[event]).find(".event").text());
 	if(message.search(/[*has just entered this chat$]/)) // subject to change after analyzing structure.
 	{	
 		return true;
@@ -92,7 +86,7 @@ function checkSignIn(event)
 // from a sign in event
 function getName(event)
 {
-	return $(msgsList[event]).find('a[target="_blank"]').text()
+	return $(msgList[event]).find('a[target="_blank"]').text()
 }
 
 function greet(name)
@@ -126,8 +120,30 @@ function send(text)
 	$("#button-send").click();
 }
 
-loadJQuery();
-main();
+function createFakeEvent()
+{
+   $("#messages-list").append(fakeEvent());
+}
+
+function createText()
+{
+   // creates fake text
+}
+function fakeEvent(){
+   return "<li id='mdl-chat-entry-20000' class='mdl-chat-my-entry'><div class='chat-event course-theme'>"+
+   "<span class='time'>03:58</span>" +
+   "<a target='_blank' href='https://ay14.moodle.umn.edu/user/view.php?id=25658&amp;course=1983'>Danh Nguyen</a>" +
+   "<span class='event'>Danh Nguyen has just entered this chat</span>" + 
+   "</div></li>";
+}
+
+
+var convoManager = [];
+var msgList = $("#messages-list").children();
+var questionBank = [];
+var msgPointer = 0;
+
+
 
 
 
