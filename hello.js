@@ -52,13 +52,14 @@ function main()
 	}
 	if else(checkForEvent == 'replied')
 	{
+		convoManager.forEach(function(entry){
 		
+		});
 	}
 	else
 	{
 		// do nothing
 	}
-	//
 
 }
 
