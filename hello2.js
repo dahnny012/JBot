@@ -96,15 +96,15 @@ function greet(name)
 	time = date.getHours() + date.getMinutes()/100;
 	switch(time){
 	case time <= 11.59:
-		greeting += "Ohayoo Gozaimasu";
+		greeting += "Ohayoo Gozaimasu" + name;
 		send(greeting);
 		break;
 	case time >= 12.00 && time <= 16.59:
-		greeting += "Konichiwa";
+		greeting += "Konichiwa" + name;
 		send(greeting);
 		break;
 	default:
-		greeting += "Konbanwa";
+		greeting += "Konbanwa" + name;
 		send(greeting);
 		break;
 	}
@@ -127,7 +127,7 @@ function createFakeEvent()
 
 function createText()
 {
-   // creates fake text
+   $("#messages-list").append(fakeText());
 }
 function fakeEvent(){
    return "<li id='mdl-chat-entry-20000' class='mdl-chat-my-entry'><div class='chat-event course-theme'>"+
@@ -137,13 +137,19 @@ function fakeEvent(){
    "</div></li>";
 }
 
+function fakeText(){
+   return "<li id='mdl-chat-entry-20000' class='mdl-chat-my-entry'><div class='chat-event course-theme'>"+
+   "<span class='time'>03:58</span>" +
+   "<a target='_blank' href='https://ay14.moodle.umn.edu/user/view.php?id=25658&amp;course=1983'>Danh Nguyen</a>" +
+   "<span class='text'>Some random Chat</span>" + 
+   "</div></li>";
+}
+
 
 var convoManager = [];
 var msgList = $("#messages-list").children();
 var questionBank = [];
 var msgPointer = 0;
-
-
 
 
 //test
