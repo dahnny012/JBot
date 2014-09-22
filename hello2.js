@@ -1,4 +1,4 @@
-<script>
+
 
 function loadJQuery()
 {	var jNode = document.createElement("script");
@@ -21,12 +21,12 @@ function person(name){
 function main()
 {
 	loop();
-	setTimeout(loop(),100);
+	setTimeout(loop(),1000);
 }
 
 function loop()
 {
-	msgList = $("#message-list").children();
+	msgList = $("#messages-list").children();
 	var convoPointer = checkForUpdate();
 	if(convoPointer)
 	{
@@ -94,22 +94,19 @@ function greet(name)
 	var date = new Date();
 	var greeting = '';
 	time = date.getHours() + date.getMinutes()/100;
-	switch(time){
-	case time <= 11.59:
-		greeting += "Ohayoo Gozaimasu" + name;
-		send(greeting);
-		break;
-	case time >= 12.00 && time <= 16.59:
-		greeting += "Konichiwa" + name;
-		send(greeting);
-		break;
-	default:
-		greeting += "Konbanwa" + name;
-		send(greeting);
-		break;
-	}
 	
-	return greeting + " " + name;
+	if( (time <= 11.59)){
+		greeting += "Ohayoo Gozaimasu " + name;
+		send(greeting);
+	}
+	else if ((time >= 12.00 && time <= 16.59)){
+		greeting += "Konichiwa " + name;
+		send(greeting);
+	}
+	else{
+		greeting += "Konbanwa " + name;
+		send(greeting);
+	}
 }
 
 
