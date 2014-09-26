@@ -18,21 +18,22 @@ function person(name){
    return this;
 }
 
-function main()
+/*function main()
 {
 	loop();
-	setTimeout(loop(),1000);
-}
+}*/
+
 
 function loop()
 {
+	console.log("Working magic");	
 	msgList = $("#messages-list").children();
 	var convoPointer = checkForUpdate();
 	if(convoPointer)
 	{
 		if(checkSignIn(convoPointer))
 		{
-			convoManager.push(person(getName(convoPointer)));
+			convoManager.push(new person(getName(convoPointer)));
 		}
 	}
    
@@ -40,6 +41,8 @@ function loop()
    {
       conversate(convoManager[i]);
    }
+   
+   setTimeout(loop,1000);
 	
 }
 
@@ -147,6 +150,7 @@ var convoManager = [];
 var msgList = $("#messages-list").children();
 var questionBank = [];
 var msgPointer = 0;
+
 
 
 //test
