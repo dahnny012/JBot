@@ -13,10 +13,23 @@ function person(name){
 	this.lname = nameSplit[1];
 	this.convoState = 'Signed In';
 	this.responses =[];
+	this.msgPointer = 0;
 	this.questionsAsked =[];
    
    return this;
 }
+	person.prototype.checkForUpdate = function(){
+		if( this.responses[this.msgPointer + 1] != null)
+		{
+			this.msgPointer++;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	};
 
 /*function main()
 {
@@ -35,14 +48,21 @@ function loop()
 		{
 			convoManager.push(new person(getName(convoPointer)));
 		}
+		if(var message = checkRespond(convoPointer))
+		{
+			var Name = getName(convoPointer));
+			var person = getPerson(name);
+			person.responses.push(message);
+			//person.responsePointer += 1;
+		}
 	}
    
    for(i=0; i<convoManager.length; i++)
    {
-      conversate(convoManager[i]);
+      conversate(getPerson(i));
    }
    
-   setTimeout(loop,1000);
+   cancel = setTimeout(loop,1000);
 	
 }
 
@@ -51,9 +71,28 @@ function conversate(person)
 	switch(person.convoState)
 	{
 		case 'Signed In':
-		greet(person.name);
+		//greet(person.name);
+		console.log("greeted");
+		person.convoState = "greeted";
 		break;
+		case 'greeted':
+		if(person.checkForUpdate())
+		{
+			//send();
+			console.log("Hai Hai , Hajimemashite");
+			person.convoState = "Start Intro";
+		}
+		case 'Start Intro':
+			//send()
+			console.log("Watashi no namae wa Hachiko desu.");
+			console.log("O-namae wa nan desuka?");
+		break;
+		//evalute(person);
 		default:
+		if(person.checkForUpdate())
+		{
+			evaluate(person);
+		}
 		// do nothing	
 		
 	}
@@ -79,6 +118,19 @@ function checkSignIn(event)
 	if(message.search(/[*has just entered this chat$]/)) // subject to change after analyzing structure.
 	{	
 		return true;
+	}
+	else
+	{
+		return false
+	}
+}
+
+function checkRespond(event)
+{
+	var message = $.trim($(msgList[event]).find(".text").text());
+	if(message.search(/[*has just entered this chat$]/)) // subject to change after analyzing structure.
+	{	
+		return message
 	}
 	else
 	{
@@ -115,7 +167,7 @@ function greet(name)
 
 function send(text)
 {
-	// load text into message box
+	msgPointer++;
 	$("#input-message").val(text);
 	$("#button-send").click();
 }
@@ -125,9 +177,9 @@ function createFakeEvent()
    $("#messages-list").append(fakeEvent());
 }
 
-function createText()
+function createText(string)
 {
-   $("#messages-list").append(fakeText());
+   $("#messages-list").append(fakeText(string));
 }
 function fakeEvent(){
    return "<li id='mdl-chat-entry-20000' class='mdl-chat-my-entry'><div class='chat-event course-theme'>"+
@@ -137,15 +189,47 @@ function fakeEvent(){
    "</div></li>";
 }
 
-function fakeText(){
-   return "<li id='mdl-chat-entry-20000' class='mdl-chat-my-entry'><div class='chat-event course-theme'>"+
-   "<span class='time'>03:58</span>" +
-   "<a target='_blank' href='https://ay14.moodle.umn.edu/user/view.php?id=25658&amp;course=1983'>Danh Nguyen</a>" +
-   "<span class='text'>Some random Chat</span>" + 
-   "</div></li>";
+function fakeText(string){
+   return "<li class=\"mdl-chat-my-entry\" id= mdl-chat-entry-23251\"><div id=\"yui_3_13_0_3_1411828399980_13\" class=\"chat-message course-theme\">"
+    + "<div class=\"chat-message-meta\">"
+      +  "<span class=\"time\">09:51</span>"
+        + "<span class=\"user\"><a href=\"\" target=\"_blank\">X-san</a></span>"
+    + "</div>"
+    + "<div id=\"yui_3_13_0_3_1411828399980_12\" class=\"text\">"
+    + string
+    + "</div>"
++"</div></li>";
+}
+function stopBot()
+{
+	clearTimeout(cancel);
+}
+
+function getPerson(number)
+{
+	return convoManager[number];
+}
+
+function findPerson(name)
+{
+	for(i=0; i<convoManager.length; i++)
+   {
+      if(getPerson(i).name == name)
+      {
+		  return getPerson(i);
+	  }
+   }
+   return null;
+}
+
+function evaluate(person)
+{
+	
 }
 
 
+
+var cancel = 0;
 var convoManager = [];
 var msgList = $("#messages-list").children();
 var questionBank = [];
