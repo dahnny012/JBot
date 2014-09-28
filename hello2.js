@@ -164,7 +164,7 @@ function greet(name)
 	}
 }
 
-
+for(var i)
 function send(text)
 {
 	msgPointer++;
