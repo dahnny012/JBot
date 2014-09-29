@@ -4,22 +4,26 @@ function loadJQuery()
 {	var jNode = document.createElement("script");
 	jNode.src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js";
 	document.body.appendChild(jNode);
+	console.log("JQUery loaded");
 }
+loadJQuery();
 
-function person(name){
+function makePerson(name){
 	var nameSplit = name.split(" ");
 	this.name = name;
 	this.fname = nameSplit[0];
 	this.lname = nameSplit[1];
 	this.convoState = 'Signed In';
-	this.responses =[];
-	this.msgPointer = 0;
-	this.questionsAsked =[];
-   
-   return this;
+	this.responses = new Array();
+	this.msgPointer = -1;
+	this.questionsAsked = new Array();
+	
+	return this;
 }
-	person.prototype.checkForUpdate = function(){
-		if( this.responses[this.msgPointer + 1] != null)
+
+
+makePerson.prototype.checkForUpdate = function(){
+		if( this.responses[this.msgPointer + 1] != undefined)
 		{
 			this.msgPointer++;
 			return true;
@@ -40,24 +44,28 @@ function person(name){
 function loop()
 {
 	console.log("Working magic");	
-	msgList = $("#messages-list").children();
+	updateList();
 	var convoPointer = checkForUpdate();
 	if(convoPointer)
 	{
 		if(checkSignIn(convoPointer))
 		{
-			convoManager.push(new person(getName(convoPointer)));
+			var signee = new makePerson(getName(convoPointer));
+			convoManager.push(signee);
 		}
-		if(var message = checkRespond(convoPointer))
+		var message =  checkRespond(convoPointer);
+		if(!checkEmpty(message))
 		{
-			var Name = getName(convoPointer));
-			var person = getPerson(name);
-			person.responses.push(message);
-			//person.responsePointer += 1;
+			var name = getName(convoPointer);
+			var person = findPerson(name);
+			if(person != null)
+			{
+				person.responses.push(message);
+			}
 		}
 	}
    
-   for(i=0; i<convoManager.length; i++)
+   for(var i=0; i<convoManager.length; i++)
    {
       conversate(getPerson(i));
    }
@@ -79,19 +87,35 @@ function conversate(person)
 		if(person.checkForUpdate())
 		{
 			//send();
-			console.log("Hai Hai , Hajimemashite");
+			console.log("Hajimemashite" + person.name);
 			person.convoState = "Start Intro";
 		}
+		break;
 		case 'Start Intro':
 			//send()
+			console.log(person.name);
 			console.log("Watashi no namae wa Hachiko desu.");
 			console.log("O-namae wa nan desuka?");
+			person.convoState = "Asked for name";
+		break;
+		case 'Asked for name':
+		if(person.checkForUpdate())
+		{
+			if(evaluate(person))
+			{
+				console.log("Yoroshiku Onegaishimasu");
+			}
+			else
+			{
+				log("Sumimasen , mochido kitte kudasai");
+			}
+		}
 		break;
 		//evalute(person);
 		default:
 		if(person.checkForUpdate())
 		{
-			evaluate(person);
+			log("Sumimasen , mochido kitte kudasai");
 		}
 		// do nothing	
 		
@@ -104,6 +128,7 @@ function checkForUpdate()
 	if(msgList[msgPointer + 1] != null)
 	{
 		msgPointer++;
+		log("update found");
 		return msgPointer;
 	}
 	else
@@ -115,8 +140,9 @@ function checkForUpdate()
 function checkSignIn(event)
 {
 	var message = $.trim($(msgList[event]).find(".event").text());
-	if(message.search(/[*has just entered this chat$]/)) // subject to change after analyzing structure.
+	if(message.match(/has just entered this chat/) != null) // subject to change after analyzing structure.
 	{	
+		log("someone signed in");
 		return true;
 	}
 	else
@@ -128,20 +154,18 @@ function checkSignIn(event)
 function checkRespond(event)
 {
 	var message = $.trim($(msgList[event]).find(".text").text());
-	if(message.search(/[*has just entered this chat$]/)) // subject to change after analyzing structure.
-	{	
-		return message
-	}
-	else
-	{
-		return false
-	}
+	return message;
 }
 
 // from a sign in event
 function getName(event)
 {
-	return $(msgList[event]).find('a[target="_blank"]').text()
+	return $.trim($(msgList[event]).find('a[target="_blank"]').text());
+}
+
+function checkEmpty(string)
+{
+	return string == "";
 }
 
 function greet(name)
@@ -164,7 +188,31 @@ function greet(name)
 	}
 }
 
-for(var i)
+function evaluate(person)
+{
+	switch(person.convoState)
+	{
+		case 'Asked for name':
+			var findName = new RegExp(person.name + ".desu");
+			for(i=0; i<person.responses.length; i++)
+			{
+				var response = person.responses[i];
+				if(response.match(findName))
+				{
+					person.convoState("I havent thought this far ahead");
+					return true;
+				}
+				
+			}
+			return false;
+		break
+		default:
+		log("Sumimasen , mochido kitte kudasai");
+	}
+}
+
+
+
 function send(text)
 {
 	msgPointer++;
@@ -172,28 +220,31 @@ function send(text)
 	$("#button-send").click();
 }
 
-function createFakeEvent()
+function createFakeEvent(user)
 {
-   $("#messages-list").append(fakeEvent());
+	if(typeof(user) === 'undefined') 
+		user = "X-san";
+   $("#messages-list").append(fakeEvent(user));
 }
 
-function createText(string)
+function createText(string,user)
 {
-   $("#messages-list").append(fakeText(string));
+   $("#messages-list").append(fakeText(string,user));
 }
-function fakeEvent(){
+function fakeEvent(user)
+{
    return "<li id='mdl-chat-entry-20000' class='mdl-chat-my-entry'><div class='chat-event course-theme'>"+
    "<span class='time'>03:58</span>" +
-   "<a target='_blank' href='https://ay14.moodle.umn.edu/user/view.php?id=25658&amp;course=1983'>Danh Nguyen</a>" +
-   "<span class='event'>Danh Nguyen has just entered this chat</span>" + 
+   "<a target='_blank' href='https://ay14.moodle.umn.edu/user/view.php?id=25658&amp;course=1983'>"+user+"</a>" +
+   "<span class='event'>"+user+" has just entered this chat</span>" + 
    "</div></li>";
 }
 
-function fakeText(string){
+function fakeText(string,user){
    return "<li class=\"mdl-chat-my-entry\" id= mdl-chat-entry-23251\"><div id=\"yui_3_13_0_3_1411828399980_13\" class=\"chat-message course-theme\">"
     + "<div class=\"chat-message-meta\">"
       +  "<span class=\"time\">09:51</span>"
-        + "<span class=\"user\"><a href=\"\" target=\"_blank\">X-san</a></span>"
+        + "<span class=\"user\"><a href=\"\" target=\"_blank\">" + user + "</a></span>"
     + "</div>"
     + "<div id=\"yui_3_13_0_3_1411828399980_12\" class=\"text\">"
     + string
@@ -203,11 +254,6 @@ function fakeText(string){
 function stopBot()
 {
 	clearTimeout(cancel);
-}
-
-function getPerson(number)
-{
-	return convoManager[number];
 }
 
 function findPerson(name)
@@ -222,17 +268,44 @@ function findPerson(name)
    return null;
 }
 
-function evaluate(person)
+function getPerson(number)
 {
+	return convoManager[number];
+}
+
+function resetConvo()
+{
+	convoManager = [];
 	
 }
 
+function reboot()
+{
+	stopBot();
+	resetConvo();
+}
+
+function updateList()
+{
+	msgList = $("#messages-list").children();
+}
+
+function log(string)
+{
+	console.log(string);
+}
+
+function updatePointer()
+{
+	msgPointer = msgList.length - 1;
+}
 
 
+//globals
 var cancel = 0;
-var convoManager = [];
+var convoManager = new Array();
 var msgList = $("#messages-list").children();
-var questionBank = [];
+var questionBank = new Array();
 var msgPointer = 0;
 
 
